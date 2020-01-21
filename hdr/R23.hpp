@@ -1,6 +1,8 @@
 #ifndef R23_HPP
 #define R23_HPP
 
+#include <cassert>
+
 class R2 {
 
   double x, y;
@@ -52,7 +54,7 @@ inline const R2& operator-() const{
 }
 
 inline double operator()(int i) const{
-  cassert(i>=0 && i<2);
+  assert(i>=0 && i<2);
   if(i==0){
     return x;
   }
@@ -60,7 +62,7 @@ inline double operator()(int i) const{
 }
 
 inline double& operator()(int i){
-  cassert(i>=0 && i<2);
+  assert(i>=0 && i<2);
   if(i==0){
     return x;
   }
@@ -93,7 +95,7 @@ inline const R3& operator-() const{
 }
 
 inline double operator()(int i) const{
-  cassert(i>=0 && i<3);
+  assert(i>=0 && i<3);
   if(i==0){
     return x;
   }
@@ -104,7 +106,7 @@ inline double operator()(int i) const{
 }
 
 inline double& operator()(int i){
-  cassert(i>=0 && i<3);
+  assert(i>=0 && i<3);
   if(i==0){
     return x;
   }
