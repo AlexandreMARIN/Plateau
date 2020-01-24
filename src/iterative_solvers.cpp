@@ -3,7 +3,7 @@
 #include <cmath>
 #include <typeinfo>
 
-#include "../include/iterative_solvers.hpp"
+#include "../hdr/iterative_solvers.hpp"
 
 using namespace std;
 

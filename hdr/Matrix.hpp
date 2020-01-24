@@ -1,9 +1,13 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
+
+
 #include <iostream>
 #include <vector>
 #include <string>
+#include <utility>
+#include <list>
 
 /* for displaying real vectors, represented by std::vector<double> */
 std::ostream& operator<<(std::ostream&, const std::vector<double>&);
@@ -65,18 +69,11 @@ public:
   virtual double operator()(int, int) const = 0;
   virtual double& operator()(int, int) = 0;
 
-  /**************************************/
-  /*To compare two sorts of conjugate****/
-  /*gradients, we use them on the matrix*/
-  /*and save norms of residual vectors***/
-  /*in a file in Json format.************/
-  /**************************************/
-  std::string resvec_to_json(double, int) const;
 
   virtual void MvProd(const std::vector<double>&, std::vector<double>&) const = 0;
-  virtual void LUSolve(std::vector<double>&, const std::vector<double>&) const = 0;
+
   void cg(std::vector<double>&, const std::vector<double>&) const;
-  void pcg(std::vector<double>&, const std::vector<double>&, double) const;
+
   virtual AtomicMatrix* clone() const = 0;
 
 };
@@ -108,6 +105,7 @@ public:
     -if d>0, the d-th diagonal under the diagonal will be filled with alpha
     -...
   */
+  void resize(int, int);
   void diag(double, int = 0);
   void LoadFromFile(const std::string&);
 
@@ -128,37 +126,29 @@ public:
 class CSR : public AtomicMatrix{
 
   int nnz;//number of non-zeros
-  int* row, *col;
-  double* val;
+  std::vector<std::list<std::pair<int, double> >::iterator> row;
+  std::list<std::pair<int, double> > colval;
 
 public:
 
   CSR() = default;
   CSR(int, int);
-  CSR(const DenseMatrix&);
   CSR(const CSR&);
-  CSR(CSR&&);
-  ~CSR();
+  CSR(CSR&&) = default;
+  ~CSR() = default;
 
-  operator DenseMatrix() const;
 
   CSR& operator=(const CSR&);
-  CSR& operator=(CSR&&);
+  CSR& operator=(CSR&&) = default;
   double operator()(int, int) const;
   double& operator()(int, int);
-  CSR operator()(const std::vector<int>&, const std::vector<int>&) const;
-
 
   void MvProd(const std::vector<double>&, std::vector<double>&) const;
-  void LUSolve(std::vector<double>&, const std::vector<double>&) const;
 
   CSR* clone() const override;
 
   friend std::ostream& operator<<(std::ostream&, const CSR&);
 
-  /*these methods quickly build sparse matrices*/
-  static CSR laplacian(int);
-  static CSR H(int);
 };
 
 
