@@ -11,7 +11,7 @@ public:
   N3() = default;
   N3(const N3&) = default;
   N3(N3&&) = default;
-  N3(int x, int y, int z) : x(xx), y(yy), z(zz){}
+  N3(int xx, int yy, int zz) : x(xx), y(yy), z(zz){}
 
   N3& operator=(const N3&) = default;
   N3& operator=(N3&&) = default;
@@ -33,12 +33,13 @@ public:
 
   R2& operator=(const R2&) = default;
   R2& operator=(R2&&) = default;
-  const R2& operator-() const;
+  R2 operator-() const;
   double operator()(int) const;
   double& operator()(int);
   friend R2 operator+(const R2&, const R2&);
   friend R2 operator-(const R2&, const R2&);
-  double operator,(const R2&, const R2&);
+  friend R2 operator*(double, const R2&);
+  friend double operator,(const R2&, const R2&);
   R2 ortho() const;
 };
 
@@ -55,12 +56,13 @@ public:
 
   R3& operator=(const R3&) = default;
   R3& operator=(R3&&) = default;
-  const R3& operator-() const;
+  R3 operator-() const;
   double operator()(int) const;
   double& operator()(int);
   friend R3 operator+(const R3&, const R3&);
   friend R3 operator-(const R3&, const R3&);
-  double operator,(const R3&, const R3&);
+  friend R3 operator*(double, const R3&);
+  friend double operator,(const R3&, const R3&);
 };
 
 
@@ -88,10 +90,8 @@ inline int& N3::operator()(int i){
 }
 
 /*class R2*/
-inline const R2& R2::operator-() const{
-  x = -x;
-  y = -y;
-  return *this;
+inline R2 R2::operator-() const{
+  return R2{-x, -y};
 }
 
 inline double R2::operator()(int i) const{
@@ -110,15 +110,19 @@ inline double& R2::operator()(int i){
   return y;
 }
 
-inline R2 R2::operator+(const R2& a, const R2& b){
+inline R2 operator+(const R2& a, const R2& b){
   return R2{a.x + b.x, a.y + b.y};
 }
 
-inline R2 R2::operator-(const R2& a, const R2& b){
+inline R2 operator-(const R2& a, const R2& b){
   return R2{a.x - b.x, a.y - b.y};
 }
 
-inline double R2::operator,(const R2& a, const R2& b){
+inline R2 operator*(double a, const R2& u){
+  return R2{a*u.x, a*u.y};
+}
+
+inline double operator,(const R2& a, const R2& b){
   return a.x*b.x + a.y*b.y;
 }
 
@@ -128,11 +132,8 @@ inline R2 R2::ortho() const{
 
 
 /*class R3*/
-inline const R3& R3::operator-() const{
-  x = -x;
-  y = -y;
-  z = -z;
-  return *this;
+inline R3 R3::operator-() const{
+  return R3{-x, -y, -z};
 }
 
 inline double R3::operator()(int i) const{
@@ -157,15 +158,19 @@ inline double& R3::operator()(int i){
   return z;
 }
 
-inline R3 R3::operator+(const R3& a, const R3& b){
+inline R3 operator+(const R3& a, const R3& b){
   return R3{a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
-inline R3 R3::operator-(const R3& a, const R3& b){
+inline R3 operator-(const R3& a, const R3& b){
   return R3{a.x - b.x, a.y - b.y, a.z - b.z};
 }
 
-inline double R3::operator,(const R3& a, const R3& b){
+inline R3 operator*(double a, const R3& u){
+  return R3{a*u.x, a*u.y, a*u.z};
+}
+
+inline double operator,(const R3& a, const R3& b){
   return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
