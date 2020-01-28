@@ -17,13 +17,13 @@ public:
 
   SurfMesh3D& operator=(const SurfMesh3D&) = default;
   SurfMesh3D& operator=(SurfMesh3D&&) = default;
-  //void set_z_coord_vert(const std::vector<double>&);
+  void set_z_coord(const std::vector<int>&, const std::vector<double>&);
   const std::vector<R3>& vert() const;
   const std::vector<bool>& isonboundary() const;
   const std::vector<N3>& tri() const;
   const std::vector<std::vector<int> >& vert_to_tri() const;
 
-  //void save(std::string) const;
+  void exportGnuplot(const std::string&) const;
 
 private:
   std::vector<R3> vert_;

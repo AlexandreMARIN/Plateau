@@ -16,7 +16,7 @@ public:
   Plateau& operator=(Plateau&&) = default;
 
   void solve();
-  //  void exportGnuplot(const std::string&);
+  void exportGnuplot(const std::string&);
 
 private:
 

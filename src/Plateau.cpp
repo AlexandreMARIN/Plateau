@@ -143,4 +143,12 @@ void Plateau::solve(){
 
   }while( (iter_ < maxnbiter_) && (diff > tol_) );
 
+
+  //we save the solution
+  surf.set_z_coord(i2v, u_);
+
+}
+
+void Plateau::exportGnuplot(const string& filename){
+  surf.exportGnuplot(filename);
 }
