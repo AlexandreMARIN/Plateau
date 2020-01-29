@@ -137,7 +137,7 @@ void IterSolver::solve(){
   x_.assign(x_.size(), 0.0);
   r_ = *b_;
 
-  while( (rnorm=norm(r_, norm_))>limit && niter_<n_max_ ){
+  while( ((rnorm=norm(r_, norm_))>limit) && (niter_ < n_max_) ){
     update_solution();
     update_resvec();
     resvec_.push_back((bnorm!=0.0)?rnorm/bnorm:numeric_limits<double>::quiet_NaN());
@@ -160,6 +160,9 @@ void ConjGrad::init(){
 
 void ConjGrad::update_solution(){
   aux = sq_norm(r_, Norm::EUCLIDIAN);
+  if(aux==0.){
+    return;
+  }
   alpha_ = aux/sq_norm(p_, Norm::NORM_A);
   for(int i=0;(vector<double>::size_type)i<x_.size();i++){
     x_[i] += alpha_*p_[i];
@@ -169,10 +172,14 @@ void ConjGrad::update_solution(){
 void ConjGrad::update_resvec(){
 
   int i;
+  if(aux==0.){
+    niter_ = n_max_;
+  }
   A_->MvProd(p_, aux2);
   for(i=0;(vector<double>::size_type)i<r_.size();i++){
     r_[i] -= alpha_*aux2[i];
   }
+
   aux = sq_norm(r_, Norm::EUCLIDIAN)/aux;
   for(i=0;(vector<double>::size_type)i<r_.size();i++){
     p_[i] = r_[i] + aux*p_[i];
