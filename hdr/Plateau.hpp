@@ -17,6 +17,7 @@ public:
 
   void solve();
   void exportGnuplot(const std::string&);
+  int get_iter();
 
 private:
 
@@ -27,6 +28,8 @@ private:
 
 };
 
-
+inline int Plateau::get_iter(){
+  return iter_;
+}
 
 #endif

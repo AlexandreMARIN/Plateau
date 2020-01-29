@@ -28,7 +28,7 @@ void Plateau::solve(){
 
   /* we fill u_ with the z-coordinates of all the nodes on the boundary in the initial mesh */
   for(int i=0; static_cast<vector<bool>::size_type>(i)<isonboundary.size() ;i++){
-    if(isonboundary[i]){
+    if(!isonboundary[i]){
       v2i.push_back(i2v.size());
       i2v.push_back(i);
       u_.push_back(vert[i](2));
@@ -69,11 +69,12 @@ void Plateau::solve(){
 	}
       }
 
-      P01 = R2{vert[tri[k](1)](1) - vert[tri[k](0)](1), vert[tri[k](1)](2) - vert[tri[k](0)](2)};
-      P02 = R2{vert[tri[k](2)](1) - vert[tri[k](0)](1), vert[tri[k](2)](2) - vert[tri[k](0)](2)};
+      P01 = R2{vert[tri[k](1)](0) - vert[tri[k](0)](0), vert[tri[k](1)](1) - vert[tri[k](0)](1)};
+      P02 = R2{vert[tri[k](2)](0) - vert[tri[k](0)](0), vert[tri[k](2)](1) - vert[tri[k](0)](1)};
       N_K3 = P01(0)*P02(1) - P01(1)*P02(0);
 
       normN_K[k] = sqrt( N_K12(0)*N_K12(0) + N_K12(1)*N_K12(1) + N_K3*N_K3 );
+
 
     }
 
@@ -130,6 +131,8 @@ void Plateau::solve(){
 
     //we solve the linear system
     ConjGrad_.set_n_max(A_.get_nr());
+    ConjGrad_.set_norm(IterSolver::Norm::NORM_A);
+    ConjGrad_.set_tol(0.);
     A_.cg(u_, b_);
 
     //we compute a norm of (u_ - w_) to check a condition of the stop criterion
