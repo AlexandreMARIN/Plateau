@@ -72,7 +72,7 @@ public:
 
   virtual void MvProd(const std::vector<double>&, std::vector<double>&) const = 0;
 
-  void cg(std::vector<double>&, const std::vector<double>&) const;
+  void cg(std::vector<double>&, const std::vector<double>&) const;//conjugate gradient
 
   virtual AtomicMatrix* clone() const = 0;
 

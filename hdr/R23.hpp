@@ -3,7 +3,9 @@
 
 #include <cassert>
 
+/* For subscripting, indices are positive or zero. */
 
+/* triples of integers */
 class N3 {
   int x, y, z;
 
@@ -21,6 +23,7 @@ public:
 };
 
 
+/* pairs of real numbers */
 class R2 {
 
   double x, y;
@@ -39,11 +42,11 @@ public:
   friend R2 operator+(const R2&, const R2&);
   friend R2 operator-(const R2&, const R2&);
   friend R2 operator*(double, const R2&);
-  friend double operator,(const R2&, const R2&);
-  R2 ortho() const;
+  friend double operator,(const R2&, const R2&);//scalar product
+  R2 ortho() const;//returns the orthogonal vector (-y, x)
 };
 
-
+/* triples of real numbers */
 class R3 {
 
   double x, y, z;
@@ -62,7 +65,7 @@ public:
   friend R3 operator+(const R3&, const R3&);
   friend R3 operator-(const R3&, const R3&);
   friend R3 operator*(double, const R3&);
-  friend double operator,(const R3&, const R3&);
+  friend double operator,(const R3&, const R3&);//scalar product
 };
 
 
