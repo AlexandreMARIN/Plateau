@@ -1,22 +1,44 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11
-SRC = solvePlateau SurfMesh3D Matrix iterative_solvers Plateau
+EXEC = solvePlateau
+MOD = SurfMesh3D Matrix iterative_solvers Plateau
 
-SRC := $(SRC:=.cpp)
-HDR := $(SRC:.cpp=.hpp)
-OBJ := $(SRC:.cpp=.o)
+SRC := $(MOD:=.cpp) $(EXEC:=.cpp)
+HDR := $(MOD:=.hpp) R23.hpp
+OBJ := $(MOD:=.o) $(EXEC:=.o)
 
-all: solvePlateau
 
-solvePlateau: $(OBJ)
-	$(CXX) $(CXXFLAGS) -o obj/$@ $(addprefix obj/, $(OBJ))
+
+all: init $(EXEC)
+	@echo "\nThe executable file is \"solvePlateau\"\n"
+
+init:
+	-@mkdir obj
+	-@mkdir output
+	@echo "\nTwo directories have been created (obj/ and output/).\n"
+	@echo "\nPut results in /output.\n"
+
+$(EXEC): $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $(addprefix obj/, $(OBJ))
 
 print:
+	@echo "\nSources and headers:\n"
 	@echo $(SRC)
 	@echo $(HDR)
+	@echo "Contents of the directories:\n"
+	@ls src/
+	@ls hdr/
 
 
-$(OBJ) :%.o : src/%.cpp
+$(MOD:=.o) :%.o : src/%.cpp hdr/%.hpp
+	$(CXX) $(CXXFLAGS) -o obj/$@ -c $(filter %.cpp, $<)
+
+$(EXEC:=.o) :%.o : src/%.cpp
 	$(CXX) $(CXXFLAGS) -o obj/$@ -c $<
 
-.PHONY: all clean
+clean:
+	-@rm $(EXEC)
+	-@rm obj/*.o
+	-@rm *~
+
+.PHONY: all clean init print

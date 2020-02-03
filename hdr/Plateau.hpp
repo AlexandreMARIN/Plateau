@@ -32,6 +32,8 @@ public:
   //That method writes a .mesh file to save the current mesh
   void exportGnuplot(const std::string&);
 
+  void save(const std::string&);//saves the mesh in a .mesh file
+
   int get_iter();//gives the number of iterations used during the previous call to solve()
 
 private:

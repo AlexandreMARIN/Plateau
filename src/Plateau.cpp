@@ -63,9 +63,9 @@ void Plateau::solve(){
       N_K12 = R2{0., 0.};
       for(int l=0;l<3;l++){
 	if(isonboundary[tri[k](l)]){
-	  N_K12 = N_K12 + vert[tri[k](l)](2) * R2{vert[tri[k]((l+1)%3)](0) - vert[tri[k]((l+2)%3)](0), vert[tri[k]((l+1)%3)](1) - vert[tri[k]((l+2)%3)](1)};
+	  N_K12 = N_K12 + vert[tri[k](l)](2) * R2{vert[tri[k]((l+2)%3)](1) - vert[tri[k]((l+1)%3)](1), vert[tri[k]((l+1)%3)](0) - vert[tri[k]((l+2)%3)](0)};
 	}else{
-	  N_K12 = N_K12 + w_[v2i[tri[k](l)]] * R2{vert[tri[k]((l+1)%3)](0) - vert[tri[k]((l+2)%3)](0), vert[tri[k]((l+1)%3)](1) - vert[tri[k]((l+2)%3)](1)};
+	  N_K12 = N_K12 + w_[v2i[tri[k](l)]] * R2{vert[tri[k]((l+2)%3)](1) - vert[tri[k]((l+1)%3)](1), vert[tri[k]((l+1)%3)](0) - vert[tri[k]((l+2)%3)](0)};
 	}
       }
 
@@ -73,7 +73,7 @@ void Plateau::solve(){
       P02 = R2{vert[tri[k](2)](0) - vert[tri[k](0)](0), vert[tri[k](2)](1) - vert[tri[k](0)](1)};
       N_K3 = P01(0)*P02(1) - P01(1)*P02(0);
 
-      normN_K[k] = sqrt( N_K12(0)*N_K12(0) + N_K12(1)*N_K12(1) + N_K3*N_K3 );
+      normN_K[k] = sqrt( (N_K12, N_K12) + N_K3*N_K3 );
 
 
     }
@@ -91,7 +91,7 @@ void Plateau::solve(){
 	for(int l=0;l<3;l++){
 	  if(tri[tri_ind](l) == i2v[i]){
 	    li = l;
-	    DN_K12i = R2{vert[tri[tri_ind]((l+1)%3)](0) - vert[tri[tri_ind]((l+2)%3)](0), vert[tri[tri_ind]((l+1)%3)](1) - vert[tri[tri_ind]((l+2)%3)](1)};
+	    DN_K12i = R2{vert[tri[tri_ind]((l+2)%3)](1) - vert[tri[tri_ind]((l+1)%3)](1), vert[tri[tri_ind]((l+1)%3)](0) - vert[tri[tri_ind]((l+2)%3)](0)};
 	    A_(i, i) += (DN_K12i, DN_K12i) / normN_K[tri_ind];
 	    break;
 	  }
@@ -104,7 +104,7 @@ void Plateau::solve(){
 	    continue;
 	  }
 	  if(isonboundary[tri[tri_ind](l)]){
-	    N_K12 = vert[tri[tri_ind](l)](2) * R2{vert[tri[tri_ind]((l+1)%3)](0) - vert[tri[tri_ind]((l+2)%3)](0), vert[tri[tri_ind]((l+1)%3)](1) - vert[tri[tri_ind]((l+2)%3)](1)};
+	    N_K12 = vert[tri[tri_ind](l)](2) * R2{vert[tri[tri_ind]((l+2)%3)](1) - vert[tri[tri_ind]((l+1)%3)](1), vert[tri[tri_ind]((l+1)%3)](0) - vert[tri[tri_ind]((l+2)%3)](0)};
 	    b_[i] += (DN_K12i, N_K12) / normN_K[tri_ind];
 	  }else{
 	    if(v2i[tri[tri_ind](l)] < i){
@@ -112,7 +112,7 @@ void Plateau::solve(){
 		A_(i, v2i[tri[tri_ind](l)]) = 0.;
 		colind.insert(v2i[tri[tri_ind](l)]);
 	      }
-	      DN_K12j = R2{vert[tri[tri_ind]((l+1)%3)](0) - vert[tri[tri_ind]((l+2)%3)](0), vert[tri[tri_ind]((l+1)%3)](1) - vert[tri[tri_ind]((l+2)%3)](1)};
+	      DN_K12j = R2{vert[tri[tri_ind]((l+2)%3)](1) - vert[tri[tri_ind]((l+1)%3)](1), vert[tri[tri_ind]((l+1)%3)](0) - vert[tri[tri_ind]((l+2)%3)](0)};
 	      A_(i, v2i[tri[tri_ind](l)]) += (DN_K12i, DN_K12j) / normN_K[tri_ind];
 	    }
 	  }
@@ -154,4 +154,8 @@ void Plateau::solve(){
 
 void Plateau::exportGnuplot(const string& filename){
   surf.exportGnuplot(filename);
+}
+
+void Plateau::save(const string& filename){
+  surf.save(filename);
 }

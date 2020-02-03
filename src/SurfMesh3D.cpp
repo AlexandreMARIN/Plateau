@@ -92,3 +92,43 @@ void SurfMesh3D::exportGnuplot(const string& filename) const{
   }
 
 }
+
+void SurfMesh3D::save(const string& filename) const{
+
+  //in .mesh files, indices of vertices are positive !
+  ofstream file{filename};
+
+  file << "MeshVersionFormatted 2\n\nDimension 3\n\n";
+  file << "\nVertices\n" << vert_.size() << "\n";
+
+  for(const R3& v : vert_){
+    file << v(0) << " " << v(1) << " "<< v(2) << " 0\n";
+  }
+
+  file << "\nTriangles\n" << tri_.size() << "\n";
+
+  set<pair<int, int> > edges;
+  pair<int, int> edge;
+  for(const N3& n : tri_){
+    file << n(0)+1 << " " << n(1)+1 << " " << n(2)+1 << " 0\n";//label: 0
+    for(int l=0;l<3;l++){
+      if(n(l%3) < n((l+1)%3)){
+	edge = make_pair(n(l)+1, n((l+1)%3)+1);
+      }else{
+	edge = make_pair(n((l+1)%3)+1, n(l)+1);
+      }
+      if(edges.find(edge) == edges.end()){
+	edges.insert(edge);
+      }else{
+	edges.erase(edge);
+      }
+    }
+  }
+
+  file << "\nEdges\n" << edges.size() << "\n";
+  for(const auto& e : edges){
+    file << e.first << " " << e.second << " 0\n";//label: 0
+  }
+
+  file << "\nEnd";
+}

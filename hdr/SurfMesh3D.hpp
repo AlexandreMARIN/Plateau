@@ -32,9 +32,10 @@ public:
   const std::vector<std::vector<int> >& vert_to_tri() const;
 
   /* That method writes a file to represent the mesh.
-     Then the created file can be used by gnuplot.
- */
+     Then the created file can be used by gnuplot. */
   void exportGnuplot(const std::string&) const;
+
+  void save(const std::string&) const;//writes a .mesh file
 
 private:
   std::vector<R3> vert_;//vertices
